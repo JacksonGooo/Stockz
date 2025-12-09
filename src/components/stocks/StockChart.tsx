@@ -12,7 +12,7 @@ interface StockChartProps {
 }
 
 export function StockChart({ data, symbol }: StockChartProps) {
-  const [timeRange, setTimeRange] = useState<TimeRange>('1M');
+  const [timeRange, setTimeRange] = useState<TimeRange>('1W');
 
   const filteredData = useMemo(() => {
     const now = new Date();

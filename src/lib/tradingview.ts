@@ -51,9 +51,8 @@ const multiQuoteCache = new Map<string, { data: TVQuote[]; timestamp: number }>(
 const candleCache = new Map<string, { data: TVCandle[]; timestamp: number }>();
 const searchCache = new Map<string, { data: TVSearchResult[]; timestamp: number }>();
 
-const QUOTE_CACHE_DURATION = 60 * 1000; // 1 minute for stocks
-const CRYPTO_QUOTE_CACHE_DURATION = 5 * 1000; // 5 seconds for crypto (real-time updates)
-const CANDLE_CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+const QUOTE_CACHE_DURATION = 30 * 1000; // 30 seconds
+const CANDLE_CACHE_DURATION = 60 * 1000; // 1 minute (predictions update every minute)
 const SEARCH_CACHE_DURATION = 60 * 60 * 1000; // 1 hour
 
 // Exchange mappings for common stocks
@@ -67,15 +66,6 @@ const EXCHANGE_MAP: Record<string, string> = {
   'XOM': 'NYSE', 'KO': 'NYSE', 'PFE': 'NYSE', 'VZ': 'NYSE', 'T': 'NYSE',
   'ABBV': 'NYSE', 'CVX': 'NYSE', 'MRK': 'NYSE', 'PEP': 'NYSE', 'TMO': 'NYSE',
 };
-
-// Default crypto symbols to track (using Binance USDT pairs)
-const DEFAULT_CRYPTO_SYMBOLS = [
-  'BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'XRPUSDT', 'SOLUSDT',
-  'ADAUSDT', 'DOGEUSDT', 'AVAXUSDT', 'DOTUSDT', 'LINKUSDT',
-];
-
-// Crypto exchange mapping
-const CRYPTO_EXCHANGE = 'BINANCE';
 
 function getTVSymbol(symbol: string): string {
   const upper = symbol.toUpperCase();
@@ -98,10 +88,20 @@ export async function getMultipleQuotes(symbols: string[]): Promise<TVQuote[]> {
 
   const tickers = symbols.map(s => getTVSymbol(s));
 
+  // Detect asset type and use appropriate scanner endpoint
+  const isCrypto = tickers.some(t => t.includes('BINANCE:') || t.includes('COINBASE:') || t.includes('KRAKEN:'));
+  const isForex = tickers.some(t => t.includes('FX:') || t.includes('FOREX:'));
+  const isCommodity = tickers.some(t => t.includes('TVC:') || t.includes('COMEX:') || t.includes('NYMEX:'));
+
+  let scannerEndpoint = 'https://scanner.tradingview.com/america/scan';
+  if (isCrypto) scannerEndpoint = 'https://scanner.tradingview.com/crypto/scan';
+  else if (isForex) scannerEndpoint = 'https://scanner.tradingview.com/forex/scan';
+  else if (isCommodity) scannerEndpoint = 'https://scanner.tradingview.com/cfd/scan';
+
   try {
     // Single HTTP request for ALL stocks - much faster than websockets
     const { data } = await axios.post(
-      'https://scanner.tradingview.com/america/scan',
+      scannerEndpoint,
       {
         symbols: { tickers },
         columns: [
@@ -395,245 +395,4 @@ export function clearCache(): void {
   multiQuoteCache.clear();
   candleCache.clear();
   searchCache.clear();
-}
-
-/**
- * Get default crypto symbols
- */
-export function getDefaultCryptoSymbols(): string[] {
-  return [...DEFAULT_CRYPTO_SYMBOLS];
-}
-
-/**
- * FAST: Get multiple crypto quotes using TradingView Scanner API
- */
-export async function getCryptoQuotes(symbols?: string[]): Promise<TVQuote[]> {
-  const cryptoSymbols = symbols || DEFAULT_CRYPTO_SYMBOLS;
-  if (cryptoSymbols.length === 0) return [];
-
-  const cacheKey = `crypto-${cryptoSymbols.sort().join(',')}`;
-  const cached = multiQuoteCache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CRYPTO_QUOTE_CACHE_DURATION) {
-    return cached.data;
-  }
-
-  // Format symbols for TradingView crypto endpoint
-  const tickers = cryptoSymbols.map(s => `${CRYPTO_EXCHANGE}:${s.toUpperCase()}`);
-
-  try {
-    const { data } = await axios.post(
-      'https://scanner.tradingview.com/crypto/scan',
-      {
-        symbols: { tickers },
-        columns: [
-          'name', 'close', 'change', 'change_abs', 'high', 'low', 'open',
-          'volume', 'Recommend.All', 'exchange', 'description', 'type',
-          'Perf.W', 'Perf.1M', 'Perf.3M', 'Perf.6M', 'Perf.Y', 'Perf.YTD',
-          'Volatility.W', 'Volatility.M', 'SMA20', 'SMA50', 'SMA200',
-          'RSI', 'MACD.macd', 'MACD.signal', 'ADX', 'Mom', 'CCI20',
-          'Stoch.K', 'Stoch.D', 'W.R', 'BBPower', 'ATR',
-          'High.1M', 'Low.1M', 'High.3M', 'Low.3M', 'High.6M', 'Low.6M',
-          '24h_vol_change|5', 'market_cap_basic', 'currency',
-        ],
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0',
-        },
-        timeout: 5000,
-      }
-    );
-
-    const quotes: TVQuote[] = data.data.map((item: { s: string; d: (string | number | null)[] }) => {
-      const [exchange, symbol] = item.s.split(':');
-      const d = item.d;
-
-      const taScore = (d[8] as number) || 0;
-      let recommendation = 'NEUTRAL';
-      if (taScore >= 0.5) recommendation = 'STRONG_BUY';
-      else if (taScore >= 0.1) recommendation = 'BUY';
-      else if (taScore <= -0.5) recommendation = 'STRONG_SELL';
-      else if (taScore <= -0.1) recommendation = 'SELL';
-
-      const quote: TVQuote = {
-        symbol,
-        exchange,
-        name: (d[10] as string) || (d[0] as string) || symbol,
-        price: (d[1] as number) || 0,
-        changePercent: (d[2] as number) || 0,
-        change: (d[3] as number) || 0,
-        high: (d[4] as number) || 0,
-        low: (d[5] as number) || 0,
-        open: (d[6] as number) || 0,
-        previousClose: ((d[1] as number) || 0) - ((d[3] as number) || 0),
-        volume: (d[7] as number) || 0,
-        currency: (d[42] as string) || 'USD',
-        recommendation,
-        taScore,
-      };
-
-      return quote;
-    });
-
-    multiQuoteCache.set(cacheKey, { data: quotes, timestamp: Date.now() });
-    return quotes;
-  } catch (error) {
-    console.error('Error fetching crypto quotes:', error);
-    return [];
-  }
-}
-
-/**
- * Get 1-minute candles for stocks (used for prediction charts)
- * Fetches the last 30 minutes of data
- */
-export async function getMinuteCandles(
-  symbol: string,
-  count: number = 30
-): Promise<TVCandle[]> {
-  return getCandles(symbol, '1', count);
-}
-
-/**
- * Get 1-minute candles for crypto (used for prediction charts)
- */
-export async function getCryptoMinuteCandles(
-  symbol: string,
-  count: number = 30
-): Promise<TVCandle[]> {
-  const cryptoSymbol = symbol.includes(':') ? symbol : `${CRYPTO_EXCHANGE}:${symbol.toUpperCase()}`;
-  const cacheKey = `${cryptoSymbol}-1-${count}`;
-
-  const cached = candleCache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CANDLE_CACHE_DURATION) {
-    return cached.data;
-  }
-
-  try {
-    // @ts-expect-error - no types
-    const TradingView = await import('@mathieuc/tradingview');
-
-    return new Promise((resolve) => {
-      const timeout = setTimeout(() => {
-        chart.delete();
-        client.end();
-        resolve(cached?.data || generateCryptoFallbackCandles(symbol, count));
-      }, 6000);
-
-      const client = new TradingView.Client();
-      const chart = new client.Session.Chart();
-
-      chart.setMarket(cryptoSymbol, { timeframe: '1', range: count });
-
-      chart.onError(() => {
-        clearTimeout(timeout);
-        chart.delete();
-        client.end();
-        resolve(cached?.data || generateCryptoFallbackCandles(symbol, count));
-      });
-
-      let done = false;
-      chart.onUpdate(() => {
-        if (done || !chart.periods || chart.periods.length < 2) return;
-        done = true;
-
-        const candles: TVCandle[] = chart.periods
-          .filter((p: { time?: number }) => p?.time)
-          .map((p: { time: number; open: number; max: number; min: number; close: number; volume?: number }) => ({
-            timestamp: p.time * 1000,
-            open: p.open,
-            high: p.max,
-            low: p.min,
-            close: p.close,
-            volume: p.volume || 0,
-          }))
-          .sort((a: TVCandle, b: TVCandle) => a.timestamp - b.timestamp);
-
-        candleCache.set(cacheKey, { data: candles, timestamp: Date.now() });
-        clearTimeout(timeout);
-        chart.delete();
-        client.end();
-        resolve(candles);
-      });
-    });
-  } catch (error) {
-    console.error('Error getting crypto minute candles:', error);
-    return cached?.data || generateCryptoFallbackCandles(symbol, count);
-  }
-}
-
-/**
- * Generate fallback crypto candles when API fails
- */
-function generateCryptoFallbackCandles(symbol: string, count: number): TVCandle[] {
-  const candles: TVCandle[] = [];
-  let seed = symbol.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  const seededRandom = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
-
-  // Start with typical crypto prices based on symbol
-  let price = symbol.includes('BTC') ? 40000 + seededRandom() * 5000 :
-              symbol.includes('ETH') ? 2000 + seededRandom() * 500 :
-              symbol.includes('SOL') ? 100 + seededRandom() * 50 :
-              10 + seededRandom() * 100;
-
-  const now = Date.now();
-
-  for (let i = count; i >= 0; i--) {
-    const change = (seededRandom() - 0.5) * price * 0.005; // 0.5% max per minute
-    price = Math.max(0.01, price + change);
-    const vol = seededRandom() * 0.003;
-    candles.push({
-      timestamp: now - i * 60000, // 1 minute intervals
-      open: price * (1 - vol),
-      high: price * (1 + vol),
-      low: price * (1 - vol * 1.5),
-      close: price,
-      volume: Math.floor(100000 + seededRandom() * 5000000),
-    });
-  }
-  return candles;
-}
-
-/**
- * Search for crypto assets
- */
-export async function searchCrypto(query: string): Promise<TVSearchResult[]> {
-  const cacheKey = `crypto-search-${query}`;
-  const cached = searchCache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < SEARCH_CACHE_DURATION) {
-    return cached.data;
-  }
-
-  try {
-    const { data } = await axios.get(
-      'https://symbol-search.tradingview.com/symbol_search/v3/',
-      {
-        params: {
-          text: query,
-          search_type: 'crypto',
-          start: 0,
-          exchange: 'crypto',
-        },
-        headers: { origin: 'https://www.tradingview.com' },
-        timeout: 3000,
-      }
-    );
-
-    const results: TVSearchResult[] = data.symbols
-      .slice(0, 15)
-      .map((s: { symbol: string; exchange: string; description: string; type: string; prefix?: string }) => ({
-        id: s.prefix ? `${s.prefix}:${s.symbol}` : `CRYPTO:${s.symbol}`,
-        symbol: s.symbol,
-        exchange: s.exchange || 'CRYPTO',
-        name: s.description,
-        type: s.type || 'crypto',
-      }));
-
-    searchCache.set(cacheKey, { data: results, timestamp: Date.now() });
-    return results;
-  } catch (error) {
-    console.error('Error searching crypto:', error);
-    return [];
-  }
 }

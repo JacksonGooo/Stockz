@@ -1,0 +1,32 @@
+{
+  "stocks": {
+    "running": false,
+    "completed": true,
+    "newCandles": 14459457,
+    "lastUpdate": "2025-12-08T22:55:01.667Z",
+    "source": "Alpaca"
+  },
+  "crypto": {
+    "running": false,
+    "current": null,
+    "processed": 0,
+    "total": 0,
+    "newCandles": 0,
+    "lastUpdate": "2025-12-08T23:12:16.640Z",
+    "completed": true
+  },
+  "forex": {
+    "running": false,
+    "completed": true,
+    "newCandles": 0,
+    "lastUpdate": "2025-12-08T22:30:04.343Z",
+    "source": "Alpaca"
+  },
+  "commodities": {
+    "running": false,
+    "completed": true,
+    "newCandles": 270603,
+    "lastUpdate": "2025-12-08T22:30:34.372Z",
+    "source": "Alpaca"
+  }
+}

@@ -1,47 +1,32 @@
 'use client';
 
-import { memo, useMemo } from 'react';
 import Link from 'next/link';
 import { Card } from '../ui/Card';
-import { PriceChangeBadge } from '../ui/Badge';
 import { Stock } from '@/ai/types';
 
 interface StockCardProps {
   stock: Stock;
   showDetails?: boolean;
-  isUpdating?: boolean;
+  compact?: boolean;
 }
 
-// Memoized StockCard to prevent unnecessary re-renders
-export const StockCard = memo(function StockCard({
-  stock,
-  showDetails = false,
-  isUpdating = false,
-}: StockCardProps) {
+export function StockCard({ stock, showDetails = false, compact = false }: StockCardProps) {
   const isPositive = stock.change >= 0;
 
-  // Memoize chart data to avoid recalculating on every render
-  const chartData = useMemo(
-    () => generateMiniChart(stock.symbol, isPositive),
-    [stock.symbol, isPositive]
-  );
+  // Generate deterministic chart data based on stock symbol
+  const chartData = generateMiniChart(stock.symbol, isPositive);
 
-  return (
-    <Link href={`/stock/${stock.symbol}`}>
-      <Card
-        hover
-        variant="default"
-        className={`
-          group overflow-hidden transition-all duration-200
-          ${isUpdating ? 'ring-2 ring-blue-400 dark:ring-blue-500' : ''}
-        `}
-      >
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <div className="flex items-center gap-3 min-w-0 flex-1">
+  // Compact view for top gainers/losers
+  if (compact) {
+    return (
+      <Link href={`/stock/${stock.symbol}`}>
+        <Card hover variant="default" className="group">
+          <div className="flex items-center gap-3">
+            {/* Stock icon */}
             <div
               className={`
-                w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center
-                font-bold text-sm transition-transform duration-300 group-hover:scale-110
+                w-9 h-9 flex-shrink-0 rounded-lg flex items-center justify-center
+                font-bold text-xs transition-transform duration-300 group-hover:scale-110
                 ${
                   isPositive
                     ? 'bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 dark:from-emerald-900/30 dark:to-emerald-900/10 dark:text-emerald-400'
@@ -51,29 +36,56 @@ export const StockCard = memo(function StockCard({
             >
               {stock.symbol.slice(0, 2)}
             </div>
-            <div className="min-w-0">
-              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
+            <div className="min-w-0 flex-1">
+              <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm mb-1">
                 {stock.symbol}
               </h3>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
-                {stock.name}
+              <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 font-mono">
+                ${stock.currentPrice.toFixed(2)}
               </p>
             </div>
           </div>
-          <PriceChangeBadge
-            change={stock.change}
-            changePercent={stock.changePercent}
-            size="sm"
-          />
+        </Card>
+      </Link>
+    );
+  }
+
+  // Standard view
+  return (
+    <Link href={`/stock/${stock.symbol}`}>
+      <Card hover variant="default" className="group overflow-hidden">
+        <div className="flex items-center gap-3 mb-3">
+          {/* Stock icon placeholder */}
+          <div
+            className={`
+              w-10 h-10 flex-shrink-0 rounded-xl flex items-center justify-center
+              font-bold text-sm transition-transform duration-300 group-hover:scale-110
+              ${
+                isPositive
+                  ? 'bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 dark:from-emerald-900/30 dark:to-emerald-900/10 dark:text-emerald-400'
+                  : 'bg-gradient-to-br from-red-100 to-red-50 text-red-600 dark:from-red-900/30 dark:to-red-900/10 dark:text-red-400'
+              }
+            `}
+          >
+            {stock.symbol.slice(0, 2)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">
+              {stock.symbol}
+            </h3>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+              {stock.name}
+            </p>
+          </div>
         </div>
 
         <div className="flex items-end justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 font-mono">
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 font-mono mb-1">
               ${stock.currentPrice.toFixed(2)}
             </p>
             {showDetails && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
                 Vol: {formatVolume(stock.volume)}
               </p>
             )}
@@ -117,7 +129,7 @@ export const StockCard = memo(function StockCard({
       </Card>
     </Link>
   );
-});
+}
 
 function formatVolume(volume: number): string {
   if (volume >= 1e9) return `${(volume / 1e9).toFixed(2)}B`;

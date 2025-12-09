@@ -61,24 +61,3 @@ export {
   getPredictionPipeline,
   resetPredictionPipeline,
 } from './predictionPipeline';
-
-// Model Training Service (new - for minute predictions)
-export {
-  trainModel,
-  quickSyntheticTraining,
-  getTrainingProgress,
-  isTrainingInProgress,
-  loadModelState,
-  needsTraining,
-  type TrainingProgress,
-  type ModelState,
-} from './modelTrainingService';
-
-// Minute Prediction Service
-export {
-  generateMinutePredictions,
-  toMinuteCandle,
-  getPredictionSummary,
-  type MinuteCandle,
-  type PredictionResult,
-} from './minutePredictionService';

@@ -84,31 +84,6 @@ body {
   }
 }
 
-/* Animation performance optimizations */
-.animate-ping,
-.animate-pulse {
-  will-change: transform, opacity;
-}
-
-/* Respect user preferences for reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .animate-ping,
-  .animate-pulse,
-  .animate-fade-in,
-  .animate-slide-in,
-  .animate-scale-in,
-  .animate-pulse-subtle,
-  .animate-shimmer,
-  .animate-float {
-    animation: none !important;
-  }
-
-  .stagger-children > * {
-    animation: none !important;
-    opacity: 1 !important;
-  }
-}
-
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -218,11 +193,11 @@ body {
 .stagger-children > *:nth-child(9) { animation-delay: 400ms; }
 .stagger-children > *:nth-child(10) { animation-delay: 450ms; }
 
-/* Glass effect (reduced blur for better performance) */
+/* Glass effect */
 .glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 @media (prefers-color-scheme: dark) {

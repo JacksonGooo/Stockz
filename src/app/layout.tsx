@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stockz - AI-Powered Stock Predictions",
-  description: "Advanced stock market analysis and AI-powered price predictions",
-  keywords: ["stocks", "AI", "predictions", "trading", "market analysis"],
+  title: "S.U.P.I.D. - AI-Powered Market Analysis",
+  description: "Advanced market analysis and AI-powered price predictions for stocks, crypto, commodities, and currencies",
+  keywords: ["stocks", "crypto", "AI", "predictions", "trading", "market analysis"],
 };
 
 export default function RootLayout({

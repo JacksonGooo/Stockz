@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Storage/Data</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #181A20;
+      color: #F1F1F1;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .top-nav {
+      text-align: center;
+      background: #23272F;
+      padding: 18px 0;
+      box-shadow: 0 2px 12px #0006;
+    }
+    .top-nav a {
+      color: #00BFAE;
+      text-decoration: none;
+      margin: 0 18px;
+      font-weight: bold;
+      font-size: 20px;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #FFB74D;
+    }
+    .storage-section {
+      margin: 60px auto 0 auto;
+      width: 700px;
+      background: #23272F;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px #0006;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .storage-section h1 {
+      color: #FFB74D;
+      font-size: 2.2em;
+      margin-bottom: 18px;
+      text-shadow: 0 2px 12px #000;
+    }
+    .storage-section img {
+      width: 180px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0008;
+      margin-bottom: 24px;
+    }
+    .storage-section p {
+      font-size: 1.2em;
+      color: #F1F1F1;
+      margin-bottom: 18px;
+    }
+    .storage-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      color: #F1F1F1;
+      font-size: 1.1em;
+    }
+    .storage-section li {
+      background: #181A20;
+      margin: 8px 0;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px #0004;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .storage-section li img {
+      width: 28px;
+      margin-right: 12px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/network">Neural Network</a>
+    <a href="/storage">Storage/Data</a>
+  </nav>
+  <div class="storage-section">
+    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80" alt="Storage" />
+    <h1>Storage & Data</h1>
+    <p>View, upload, and download files stored on your PC.</p>
+    <form action="/storage" method="post" style="margin-bottom:24px;">
+      <label for="stock" style="font-weight:bold;">Select Stock:</label>
+      <select name="stock" id="stock" required style="margin:0 12px 0 8px;padding:6px 12px;border-radius:6px;">
+        <option value="">--Choose--</option>
+        {% for stock in stocks %}
+        <option value="{{ stock }}" {% if selected_stock == stock %}selected{% endif %}>{{ stock }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" style="background:#00BFAE;color:#181A20;border:none;padding:8px 18px;border-radius:8px;font-weight:bold;cursor:pointer;">View Files</button>
+    </form>
+    {% if selected_stock %}
+    <form action="/storage/upload" method="post" enctype="multipart/form-data" style="margin-bottom:24px;">
+      <input type="hidden" name="stock" value="{{ selected_stock }}">
+      <input type="file" name="file" required>
+      <button type="submit" style="background:#00BFAE;color:#181A20;border:none;padding:8px 18px;border-radius:8px;font-weight:bold;cursor:pointer;">Upload to {{ selected_stock }}</button>
+    </form>
+    <ul>
+      {% for file in files %}
+      <li>
+        <img src="https://cdn-icons-png.flaticon.com/512/337/337946.png" alt="File" />
+        <a href="/storage/download/{{ selected_stock }}/{{ file }}" style="color:#FFB74D;text-decoration:none;">{{ file }}</a>
+      </li>
+      {% else %}
+      <li>No files found for {{ selected_stock }}.</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p style="margin-top:24px;">Select a stock to view and manage its files.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

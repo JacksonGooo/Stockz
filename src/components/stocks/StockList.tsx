@@ -1,6 +1,5 @@
 'use client';
 
-import { memo } from 'react';
 import { Stock } from '@/ai/types';
 import { StockCard } from './StockCard';
 import { StockCardSkeleton } from '../ui/Skeleton';
@@ -9,16 +8,16 @@ interface StockListProps {
   stocks: Stock[];
   isLoading?: boolean;
   showDetails?: boolean;
+  compact?: boolean;
   title?: string;
-  highlightSymbols?: string[];
 }
 
-export const StockList = memo(function StockList({
+export function StockList({
   stocks,
   isLoading = false,
   showDetails = false,
+  compact = false,
   title,
-  highlightSymbols = [],
 }: StockListProps) {
   if (isLoading) {
     return (
@@ -67,14 +66,9 @@ export const StockList = memo(function StockList({
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {stocks.map((stock) => (
-          <StockCard
-            key={stock.symbol}
-            stock={stock}
-            showDetails={showDetails}
-            isUpdating={highlightSymbols.includes(stock.symbol)}
-          />
+          <StockCard key={stock.symbol} stock={stock} showDetails={showDetails} compact={compact} />
         ))}
       </div>
     </div>
   );
-});
+}

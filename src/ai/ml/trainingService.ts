@@ -1,17 +1,14 @@
 /**
- * Enhanced Training Service
- * Manages background training of the enhanced stock prediction model
- * Supports multi-timeframe predictions and market context
+ * Continuous Training Service
+ * Manages background training of the stock prediction model
  */
 
-import { StockPredictionModel, ModelMetrics, createModel, ModelConfig } from './model';
+import { StockPredictionModel, ModelMetrics, createModel } from './model';
 import { fetchHistoricalData, getSupportedSymbols, HistoricalDataPoint } from './dataProvider';
 import {
   calculateAllIndicators,
   indicatorsToFeatures,
-  getFeatureCount,
   OHLCV,
-  MarketContext,
 } from './indicators';
 
 export interface TrainingStatus {
@@ -24,33 +21,28 @@ export interface TrainingStatus {
   metrics: ModelMetrics;
   startTime: Date | null;
   estimatedTimeRemaining: number | null;
-  phase: 'idle' | 'preparing' | 'training' | 'validating';
 }
 
 export interface TrainingServiceConfig {
-  trainingIntervalMs: number;
-  epochsPerCycle: number;
+  trainingIntervalMs: number; // How often to retrain
+  epochsPerCycle: number; // Epochs per training cycle
   batchSize: number;
   sequenceLength: number;
   minSamplesPerSymbol: number;
-  outputTimeframes: number[];
-  useMarketContext: boolean;
 }
 
 const DEFAULT_CONFIG: TrainingServiceConfig = {
-  trainingIntervalMs: 300000, // Train every 5 minutes (reduced frequency for speed)
-  epochsPerCycle: 10, // Reduced epochs per cycle (was 20)
-  batchSize: 128, // Increased batch size for faster training
-  sequenceLength: 30, // Reduced to 30 days lookback (was 60) for speed
-  minSamplesPerSymbol: 100, // Reduced samples needed (was 200)
-  outputTimeframes: [1, 5, 10], // Predict 1, 5, and 10 days ahead
-  useMarketContext: true,
+  trainingIntervalMs: 60000, // Train every minute
+  epochsPerCycle: 10,
+  batchSize: 32,
+  sequenceLength: 30,
+  minSamplesPerSymbol: 100,
 };
 
 type TrainingCallback = (status: TrainingStatus) => void;
 
 /**
- * Enhanced Training Service class
+ * Training Service class - manages continuous model training
  */
 class TrainingService {
   private model: StockPredictionModel;
@@ -59,19 +51,11 @@ class TrainingService {
   private trainingInterval: ReturnType<typeof setInterval> | null = null;
   private isInitialized: boolean = false;
   private callbacks: Set<TrainingCallback> = new Set();
-  private trainingData: Map<string, { sequences: number[][][]; targets: number[][] }> = new Map();
-  private marketContext: MarketContext | null = null;
+  private trainingData: Map<string, { sequences: number[][][]; targets: number[] }> = new Map();
 
   constructor(config: Partial<TrainingServiceConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-
-    const modelConfig: Partial<ModelConfig> = {
-      sequenceLength: this.config.sequenceLength,
-      featureCount: getFeatureCount(),
-      outputTimeframes: this.config.outputTimeframes,
-    };
-
-    this.model = createModel(modelConfig);
+    this.model = createModel({ sequenceLength: this.config.sequenceLength });
     this.status = {
       isRunning: false,
       currentEpoch: 0,
@@ -82,136 +66,41 @@ class TrainingService {
       metrics: this.model.getMetrics(),
       startTime: null,
       estimatedTimeRemaining: null,
-      phase: 'idle',
     };
   }
 
   /**
-   * Initialize the training service
+   * Initialize the training service (FAST - no data fetching)
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
-    console.log('Initializing Enhanced Training Service...');
-    this.status.phase = 'preparing';
-    this.notifyCallbacks();
+    console.log('Initializing Training Service (lightweight mode)...');
 
     // Try to load existing model
     const loaded = await this.model.loadModel();
     if (!loaded) {
+      // Build a fresh model if none exists
       this.model.buildModel();
     }
 
-    // Pre-fetch and prepare training data
-    await this.prepareAllTrainingData();
+    // SKIP data preparation - will be done on-demand when predictions are requested
+    // This makes initialization instant instead of taking 10+ seconds
 
     this.isInitialized = true;
-    this.status.phase = 'idle';
-    this.notifyCallbacks();
-    console.log('Enhanced Training Service initialized');
-  }
-
-  /**
-   * Update market context for training
-   */
-  updateMarketContext(context: MarketContext): void {
-    this.marketContext = context;
-  }
-
-  /**
-   * Calculate market context from aggregate market data
-   */
-  private calculateMarketContext(allData: Map<string, HistoricalDataPoint[]>): MarketContext {
-    const symbols = Array.from(allData.keys());
-    if (symbols.length === 0) {
-      return {
-        marketTrend: 0,
-        marketVolatility: 0.5,
-        sectorPerformance: 0,
-        breadthRatio: 1,
-        riskOnOff: 0,
-      };
-    }
-
-    let advancers = 0;
-    let decliners = 0;
-    let totalChange = 0;
-    let totalVolatility = 0;
-
-    for (const [, data] of allData) {
-      if (data.length < 2) continue;
-
-      const lastClose = data[data.length - 1].close;
-      const prevClose = data[data.length - 2].close;
-      const change = (lastClose - prevClose) / prevClose;
-
-      totalChange += change;
-      if (change > 0) advancers++;
-      else if (change < 0) decliners++;
-
-      // Calculate recent volatility
-      const returns = [];
-      for (let i = Math.max(1, data.length - 20); i < data.length; i++) {
-        returns.push(Math.log(data[i].close / data[i - 1].close));
-      }
-      if (returns.length > 0) {
-        const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
-        const variance = returns.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / returns.length;
-        totalVolatility += Math.sqrt(variance * 252);
-      }
-    }
-
-    const avgChange = symbols.length > 0 ? totalChange / symbols.length : 0;
-    const avgVolatility = symbols.length > 0 ? totalVolatility / symbols.length : 0.2;
-    const breadthRatio = decliners > 0 ? advancers / decliners : advancers > 0 ? 2 : 1;
-
-    return {
-      marketTrend: Math.tanh(avgChange * 100), // Normalize to -1 to 1
-      marketVolatility: Math.min(avgVolatility, 1),
-      sectorPerformance: Math.tanh(avgChange * 50),
-      breadthRatio,
-      riskOnOff: breadthRatio > 1.5 ? 1 : breadthRatio < 0.67 ? -1 : 0,
-    };
+    console.log('Training Service initialized (ready)');
   }
 
   /**
    * Prepare training data for all supported symbols
-   * Optimized: fetch only 100 days (reduced from 500) and fetch in parallel
    */
   private async prepareAllTrainingData(): Promise<void> {
-    const symbols = getSupportedSymbols().slice(0, 3); // Limit to 3 symbols for speed
+    const symbols = getSupportedSymbols();
     console.log(`Preparing training data for ${symbols.length} symbols...`);
 
-    const allHistoricalData = new Map<string, HistoricalDataPoint[]>();
-
-    // Fetch all data in parallel (much faster than sequential)
-    const fetchPromises = symbols.map(async (symbol) => {
+    for (const symbol of symbols) {
       try {
-        const data = await fetchHistoricalData(symbol, 100); // Reduced from 500 to 100 days
-        return { symbol, data };
-      } catch (error) {
-        console.warn(`Failed to fetch data for ${symbol}:`, error);
-        return { symbol, data: [] };
-      }
-    });
-
-    const results = await Promise.all(fetchPromises);
-
-    for (const { symbol, data } of results) {
-      if (data.length >= this.config.sequenceLength + 20) {
-        allHistoricalData.set(symbol, data);
-      }
-    }
-
-    // Calculate market context
-    if (this.config.useMarketContext) {
-      this.marketContext = this.calculateMarketContext(allHistoricalData);
-    }
-
-    // Second pass: prepare training data with context
-    for (const [symbol, historicalData] of allHistoricalData) {
-      try {
-        const data = this.prepareTrainingDataForSymbol(historicalData);
+        const data = await this.prepareTrainingDataForSymbol(symbol);
         if (data.sequences.length >= this.config.minSamplesPerSymbol) {
           this.trainingData.set(symbol, data);
         }
@@ -224,46 +113,44 @@ class TrainingService {
   }
 
   /**
-   * Prepare training data for a single symbol (multi-timeframe)
+   * Prepare training data for a single symbol
    */
-  private prepareTrainingDataForSymbol(
-    historicalData: HistoricalDataPoint[]
-  ): { sequences: number[][][]; targets: number[][] } {
-    const sequences: number[][][] = [];
-    const targets: number[][] = [];
+  private async prepareTrainingDataForSymbol(
+    symbol: string
+  ): Promise<{ sequences: number[][][]; targets: number[] }> {
+    // Fetch historical data
+    const historicalData = await fetchHistoricalData(symbol, 500);
 
-    const maxFutureDay = Math.max(...this.config.outputTimeframes);
+    if (historicalData.length < this.config.sequenceLength + 10) {
+      return { sequences: [], targets: [] };
+    }
+
+    const sequences: number[][][] = [];
+    const targets: number[] = [];
 
     // Create sliding window sequences
-    for (let i = this.config.sequenceLength; i < historicalData.length - maxFutureDay; i++) {
+    for (let i = this.config.sequenceLength; i < historicalData.length - 5; i++) {
       const windowData = historicalData.slice(i - this.config.sequenceLength, i);
+      const futureData = historicalData.slice(i, i + 5);
 
       // Calculate indicators for each timestep in the window
       const sequence: number[][] = [];
       for (let j = 0; j < windowData.length; j++) {
         const dataUpToPoint = historicalData.slice(0, i - this.config.sequenceLength + j + 1);
-        const indicators = calculateAllIndicators(dataUpToPoint, this.marketContext || undefined);
+        const indicators = calculateAllIndicators(dataUpToPoint);
         sequence.push(indicatorsToFeatures(indicators));
       }
 
-      // Calculate targets for multiple timeframes
+      // Calculate target: average price change over next 5 days
       const currentPrice = windowData[windowData.length - 1].close;
-      const targetValues: number[] = [];
+      const futurePrice = futureData[futureData.length - 1].close;
+      const priceChange = ((futurePrice - currentPrice) / currentPrice) * 100;
 
-      for (const days of this.config.outputTimeframes) {
-        const futureIndex = i + days - 1;
-        if (futureIndex < historicalData.length) {
-          const futurePrice = historicalData[futureIndex].close;
-          const priceChange = ((futurePrice - currentPrice) / currentPrice) * 100;
-          // Normalize to -1 to 1 (assuming max 10% change)
-          targetValues.push(Math.tanh(priceChange / 10));
-        } else {
-          targetValues.push(0);
-        }
-      }
+      // Normalize target to -1 to 1 range (assuming max 10% change)
+      const normalizedTarget = Math.tanh(priceChange / 10);
 
       sequences.push(sequence);
-      targets.push(targetValues);
+      targets.push(normalizedTarget);
     }
 
     return { sequences, targets };
@@ -309,15 +196,13 @@ class TrainingService {
       return;
     }
 
-    this.status.phase = 'training';
     this.status.totalSymbols = symbols.length;
     this.status.symbolsProcessed = 0;
     this.status.totalEpochs = this.config.epochsPerCycle;
-    this.notifyCallbacks();
 
     // Combine all training data
     const allSequences: number[][][] = [];
-    const allTargets: number[][] = [];
+    const allTargets: number[] = [];
 
     for (const symbol of symbols) {
       const data = this.trainingData.get(symbol);
@@ -351,13 +236,12 @@ class TrainingService {
         epochs: this.config.epochsPerCycle,
         batchSize: this.config.batchSize,
         validationSplit: 0.2,
-        earlyStopping: true,
-        patience: 5,
       },
       (epoch, logs) => {
         this.status.currentEpoch = epoch + 1;
         this.status.metrics = this.model.getMetrics();
 
+        // Estimate remaining time
         const elapsedMs = Date.now() - startTime;
         const msPerEpoch = elapsedMs / (epoch + 1);
         const remainingEpochs = this.config.epochsPerCycle - (epoch + 1);
@@ -367,9 +251,6 @@ class TrainingService {
       }
     );
 
-    this.status.phase = 'validating';
-    this.notifyCallbacks();
-
     // Save model after training
     try {
       await this.model.saveModel();
@@ -377,7 +258,6 @@ class TrainingService {
       console.warn('Failed to save model:', error);
     }
 
-    this.status.phase = 'idle';
     this.status.metrics = this.model.getMetrics();
     this.notifyCallbacks();
   }
@@ -391,7 +271,6 @@ class TrainingService {
       this.trainingInterval = null;
     }
     this.status.isRunning = false;
-    this.status.phase = 'idle';
     this.notifyCallbacks();
     console.log('Training stopped');
   }
@@ -431,12 +310,9 @@ class TrainingService {
    */
   async refreshSymbolData(symbol: string): Promise<void> {
     try {
-      const historicalData = await fetchHistoricalData(symbol, 500);
-      if (historicalData.length >= this.config.sequenceLength + 20) {
-        const data = this.prepareTrainingDataForSymbol(historicalData);
-        if (data.sequences.length >= this.config.minSamplesPerSymbol) {
-          this.trainingData.set(symbol, data);
-        }
+      const data = await this.prepareTrainingDataForSymbol(symbol);
+      if (data.sequences.length >= this.config.minSamplesPerSymbol) {
+        this.trainingData.set(symbol, data);
       }
     } catch (error) {
       console.warn(`Failed to refresh data for ${symbol}:`, error);
@@ -451,13 +327,6 @@ class TrainingService {
       symbol,
       samples: data.sequences.length,
     }));
-  }
-
-  /**
-   * Get current market context
-   */
-  getMarketContext(): MarketContext | null {
-    return this.marketContext;
   }
 
   /**
@@ -487,7 +356,7 @@ export function getTrainingService(
 }
 
 /**
- * Reset the training service
+ * Reset the training service (for testing)
  */
 export function resetTrainingService(): void {
   if (trainingServiceInstance) {

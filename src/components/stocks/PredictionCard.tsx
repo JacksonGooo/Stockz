@@ -1,33 +1,31 @@
 'use client';
 
-import { memo, useMemo } from 'react';
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { PredictionResult } from '@/ai/types';
-import { formatDateTimeCST } from '@/lib/time';
 
 interface PredictionCardProps {
   prediction: PredictionResult;
 }
 
-// Memoized PredictionCard to prevent unnecessary re-renders
-export const PredictionCard = memo(function PredictionCard({ prediction }: PredictionCardProps) {
-  // Memoize computed values
-  const { isPositive, confidenceColor, formattedDate } = useMemo(() => ({
-    isPositive: prediction.predictedChange >= 0,
-    confidenceColor: prediction.confidence >= 0.7
-      ? 'success' as const
-      : prediction.confidence >= 0.5
-        ? 'warning' as const
-        : 'danger' as const,
-    formattedDate: formatDateTimeCST(prediction.generatedAt),
-  }), [prediction.predictedChange, prediction.confidence, prediction.generatedAt]);
+export function PredictionCard({ prediction }: PredictionCardProps) {
+  const isPositive = prediction.predictedChange >= 0;
 
-  // Memoize factors to avoid re-creating slice
-  const displayFactors = useMemo(
-    () => prediction.factors.slice(0, 3),
-    [prediction.factors]
-  );
+  const confidenceColor =
+    prediction.confidence >= 0.7
+      ? 'success'
+      : prediction.confidence >= 0.5
+        ? 'warning'
+        : 'danger';
+
+  // Format date consistently to avoid hydration mismatch
+  const formattedDate = new Date(prediction.generatedAt).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   return (
     <Card variant="glass" className="relative overflow-hidden">
@@ -93,7 +91,7 @@ export const PredictionCard = memo(function PredictionCard({ prediction }: Predi
           </div>
           <div className="text-right">
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Predicted (60 min)
+              Predicted ({prediction.timeframe})
             </p>
             <p
               className={`text-xl font-bold font-mono ${
@@ -146,7 +144,7 @@ export const PredictionCard = memo(function PredictionCard({ prediction }: Predi
             Key Factors
           </p>
           <div className="space-y-2">
-            {displayFactors.map((factor, index) => (
+            {prediction.factors.slice(0, 3).map((factor, index) => (
               <div
                 key={index}
                 className="flex items-center gap-2 p-2 rounded-lg bg-zinc-50 dark:bg-zinc-800/30"
@@ -177,4 +175,4 @@ export const PredictionCard = memo(function PredictionCard({ prediction }: Predi
       </div>
     </Card>
   );
-});
+}

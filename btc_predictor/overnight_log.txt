@@ -1,0 +1,229 @@
+[2025-12-07T04:31:50.999Z] ============================================================
+[2025-12-07T04:31:51.001Z] OVERNIGHT DATA FIX & BACKFILL SCRIPT
+[2025-12-07T04:31:51.001Z] ============================================================
+[2025-12-07T04:31:51.001Z] Started at: 2025-12-07T04:31:51.001Z
+[2025-12-07T04:31:51.002Z] Data directory: C:\Users\Jackson Goodrich\Desktop\Stockz\Data
+[2025-12-07T04:31:51.002Z] Log file: C:\Users\Jackson Goodrich\Desktop\Stockz\btc_predictor\overnight_log.txt
+[2025-12-07T04:31:51.003Z] 
+[2025-12-07T04:31:51.004Z] ============================================================
+[2025-12-07T04:31:51.005Z] STEP 1: REORGANIZING FILES INTO CORRECT WEEK FOLDERS
+[2025-12-07T04:31:51.005Z] ============================================================
+[2025-12-07T04:31:51.007Z] Processing Commodities/COPPER...
+[2025-12-07T04:31:51.025Z]   Merged 2 files for 2025-12-05: 1294 candles
+[2025-12-07T04:31:51.032Z] Processing Commodities/GOLD...
+[2025-12-07T04:31:51.057Z]   Merged 2 files for 2025-12-05: 1320 candles
+[2025-12-07T04:31:51.063Z] Processing Commodities/NATGAS...
+[2025-12-07T04:31:51.065Z] Processing Commodities/OIL...
+[2025-12-07T04:31:51.080Z]   Merged 2 files for 2025-12-05: 1267 candles
+[2025-12-07T04:31:51.086Z] Processing Commodities/PLATINUM...
+[2025-12-07T04:31:51.099Z]   Merged 2 files for 2025-12-05: 1312 candles
+[2025-12-07T04:31:51.104Z] Processing Commodities/SILVER...
+[2025-12-07T04:31:51.116Z]   Merged 2 files for 2025-12-05: 1320 candles
+[2025-12-07T04:31:51.121Z] Processing Crypto/ADA...
+[2025-12-07T04:31:51.135Z]   Merged 2 files for 2025-12-06: 1406 candles
+[2025-12-07T04:31:51.142Z] Processing Crypto/ALGO...
+[2025-12-07T04:31:51.151Z]   Merged 2 files for 2025-12-06: 582 candles
+[2025-12-07T04:31:51.156Z] Processing Crypto/ATOM...
+[2025-12-07T04:31:51.166Z]   Merged 2 files for 2025-12-06: 935 candles
+[2025-12-07T04:31:51.171Z] Processing Crypto/AVAX...
+[2025-12-07T04:31:51.182Z]   Merged 2 files for 2025-12-06: 1200 candles
+[2025-12-07T04:31:51.188Z] Processing Crypto/BTC...
+[2025-12-07T04:31:52.291Z]   Merged 2 files for 2025-12-06: 1440 candles
+[2025-12-07T04:31:52.297Z] Processing Crypto/DOGE...
+[2025-12-07T04:31:52.307Z]   Merged 2 files for 2025-12-06: 1436 candles
+[2025-12-07T04:31:52.313Z] Processing Crypto/DOT...
+[2025-12-07T04:31:52.322Z]   Merged 2 files for 2025-12-06: 1146 candles
+[2025-12-07T04:31:52.328Z] Processing Crypto/ETH...
+[2025-12-07T04:31:53.591Z]   Merged 2 files for 2025-12-01: 1800 candles
+[2025-12-07T04:31:53.594Z]   Merged 2 files for 2025-12-02: 1800 candles
+[2025-12-07T04:31:53.597Z]   Merged 2 files for 2025-12-03: 1800 candles
+[2025-12-07T04:31:53.599Z]   Merged 2 files for 2025-12-04: 1800 candles
+[2025-12-07T04:31:53.602Z]   Merged 2 files for 2025-12-05: 1800 candles
+[2025-12-07T04:31:53.604Z]   Merged 2 files for 2025-12-06: 1440 candles
+[2025-12-07T04:31:53.605Z] Processing Crypto/LINK...
+[2025-12-07T04:31:53.645Z]   Merged 2 files for 2025-12-06: 1438 candles
+[2025-12-07T04:31:53.654Z] Processing Crypto/LTC...
+[2025-12-07T04:31:53.670Z]   Merged 2 files for 2025-12-06: 1440 candles
+[2025-12-07T04:31:53.676Z] Processing Crypto/POL...
+[2025-12-07T04:31:53.684Z]   Merged 2 files for 2025-12-06: 825 candles
+[2025-12-07T04:31:53.689Z] Processing Crypto/SOL...
+[2025-12-07T04:31:54.791Z]   Merged 2 files for 2025-12-01: 1800 candles
+[2025-12-07T04:31:54.793Z]   Merged 2 files for 2025-12-02: 1800 candles
+[2025-12-07T04:31:54.798Z]   Merged 2 files for 2025-12-03: 1800 candles
+[2025-12-07T04:31:54.800Z]   Merged 2 files for 2025-12-04: 1800 candles
+[2025-12-07T04:31:54.801Z]   Merged 2 files for 2025-12-05: 1800 candles
+[2025-12-07T04:31:54.803Z]   Merged 2 files for 2025-12-06: 1440 candles
+[2025-12-07T04:31:54.804Z] Processing Crypto/UNI...
+[2025-12-07T04:31:54.821Z]   Merged 2 files for 2025-12-06: 1134 candles
+[2025-12-07T04:31:54.858Z] Processing Crypto/XLM...
+[2025-12-07T04:31:54.875Z]   Merged 2 files for 2025-12-06: 1418 candles
+[2025-12-07T04:31:54.891Z] Processing Crypto/XRP...
+[2025-12-07T04:31:55.860Z]   Merged 2 files for 2025-12-01: 1800 candles
+[2025-12-07T04:31:55.862Z]   Merged 2 files for 2025-12-02: 1800 candles
+[2025-12-07T04:31:55.864Z]   Merged 2 files for 2025-12-03: 1800 candles
+[2025-12-07T04:31:55.866Z]   Merged 2 files for 2025-12-04: 1800 candles
+[2025-12-07T04:31:55.868Z]   Merged 2 files for 2025-12-05: 1800 candles
+[2025-12-07T04:31:55.869Z]   Merged 2 files for 2025-12-06: 1440 candles
+[2025-12-07T04:31:55.871Z] Processing Currencies/AUDUSD...
+[2025-12-07T04:31:55.881Z]   Merged 2 files for 2025-12-05: 1319 candles
+[2025-12-07T04:31:55.885Z] Processing Currencies/EURGBP...
+[2025-12-07T04:31:55.894Z]   Merged 2 files for 2025-12-05: 1318 candles
+[2025-12-07T04:31:55.899Z] Processing Currencies/EURUSD...
+[2025-12-07T04:31:55.913Z]   Merged 2 files for 2025-12-05: 1320 candles
+[2025-12-07T04:31:55.918Z] Processing Currencies/GBPUSD...
+[2025-12-07T04:31:55.928Z]   Merged 2 files for 2025-12-05: 1319 candles
+[2025-12-07T04:31:55.932Z] Processing Currencies/NZDUSD...
+[2025-12-07T04:31:55.945Z]   Merged 2 files for 2025-12-05: 1315 candles
+[2025-12-07T04:31:55.951Z] Processing Currencies/USDCAD...
+[2025-12-07T04:31:55.959Z]   Merged 2 files for 2025-12-05: 1319 candles
+[2025-12-07T04:31:55.963Z] Processing Currencies/USDCHF...
+[2025-12-07T04:31:55.974Z]   Merged 2 files for 2025-12-05: 1316 candles
+[2025-12-07T04:31:55.978Z] Processing Currencies/USDJPY...
+[2025-12-07T04:31:55.990Z]   Merged 2 files for 2025-12-05: 1319 candles
+[2025-12-07T04:31:55.997Z] Processing Stock Market/AAPL...
+[2025-12-07T04:31:56.017Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.020Z] Processing Stock Market/AMZN...
+[2025-12-07T04:31:56.040Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.043Z] Processing Stock Market/BAC...
+[2025-12-07T04:31:56.070Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.073Z] Processing Stock Market/DIA...
+[2025-12-07T04:31:56.127Z]   Merged 2 files for 2025-12-05: 383 candles
+[2025-12-07T04:31:56.131Z] Processing Stock Market/GOOGL...
+[2025-12-07T04:31:56.154Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.157Z] Processing Stock Market/IWM...
+[2025-12-07T04:31:56.189Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.193Z] Processing Stock Market/JNJ...
+[2025-12-07T04:31:56.210Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.212Z] Processing Stock Market/JPM...
+[2025-12-07T04:31:56.231Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.233Z] Processing Stock Market/MA...
+[2025-12-07T04:31:56.247Z]   Merged 2 files for 2025-12-05: 383 candles
+[2025-12-07T04:31:56.249Z] Processing Stock Market/META...
+[2025-12-07T04:31:56.266Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.268Z] Processing Stock Market/MSFT...
+[2025-12-07T04:31:56.282Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.284Z] Processing Stock Market/NVDA...
+[2025-12-07T04:31:56.299Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.302Z] Processing Stock Market/PG...
+[2025-12-07T04:31:56.316Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.318Z] Processing Stock Market/QQQ...
+[2025-12-07T04:31:56.332Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.334Z] Processing Stock Market/SPY...
+[2025-12-07T04:31:56.350Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.353Z] Processing Stock Market/TSLA...
+[2025-12-07T04:31:56.370Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.373Z] Processing Stock Market/UNH...
+[2025-12-07T04:31:56.388Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.390Z] Processing Stock Market/V...
+[2025-12-07T04:31:56.406Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.408Z] Processing Stock Market/WMT...
+[2025-12-07T04:31:56.424Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.426Z] Processing Stock Market/XOM...
+[2025-12-07T04:31:56.442Z]   Merged 2 files for 2025-12-05: 390 candles
+[2025-12-07T04:31:56.444Z] Reorganization complete: 1974 files, 63 merged, 403 old folders deleted
+[2025-12-07T04:31:56.444Z] 
+[2025-12-07T04:31:56.445Z] ============================================================
+[2025-12-07T04:31:56.445Z] STEP 2: VERIFYING DATA COMPLETENESS
+[2025-12-07T04:31:56.445Z] ============================================================
+[2025-12-07T04:31:56.462Z]   Commodities/COPPER: 6,659 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:56.470Z]   Commodities/GOLD: 6,900 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:56.471Z]   Commodities/NATGAS: 100 candles, 0/1 complete (0.0%)
+[2025-12-07T04:31:56.476Z]   Commodities/OIL: 6,597 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:56.487Z]   Commodities/PLATINUM: 6,889 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:56.500Z]   Commodities/SILVER: 6,900 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:56.513Z]   Crypto/ADA: 8,657 candles, 6/7 complete (85.7%)
+[2025-12-07T04:31:56.518Z]   Crypto/ALGO: 5,386 candles, 0/7 complete (0.0%)
+[2025-12-07T04:31:56.523Z]   Crypto/ATOM: 6,012 candles, 0/7 complete (0.0%)
+[2025-12-07T04:31:56.528Z]   Crypto/AVAX: 7,882 candles, 1/7 complete (14.3%)
+[2025-12-07T04:31:56.897Z]   Crypto/BTC: 562,789 candles, 389/392 complete (99.2%)
+[2025-12-07T04:31:56.902Z]   Crypto/DOGE: 8,699 candles, 6/7 complete (85.7%)
+[2025-12-07T04:31:56.907Z]   Crypto/DOT: 7,931 candles, 1/7 complete (14.3%)
+[2025-12-07T04:31:57.235Z]   Crypto/ETH: 592,836 candles, 410/412 complete (99.5%)
+[2025-12-07T04:31:57.240Z]   Crypto/LINK: 8,699 candles, 6/7 complete (85.7%)
+[2025-12-07T04:31:57.245Z]   Crypto/LTC: 8,712 candles, 6/7 complete (85.7%)
+[2025-12-07T04:31:57.249Z]   Crypto/POL: 6,214 candles, 0/7 complete (0.0%)
+[2025-12-07T04:31:57.528Z]   Crypto/SOL: 528,008 candles, 365/367 complete (99.5%)
+[2025-12-07T04:31:57.533Z]   Crypto/UNI: 8,081 candles, 4/7 complete (57.1%)
+[2025-12-07T04:31:57.538Z]   Crypto/XLM: 8,662 candles, 6/7 complete (85.7%)
+[2025-12-07T04:31:57.818Z]   Crypto/XRP: 527,999 candles, 365/367 complete (99.5%)
+[2025-12-07T04:31:57.823Z]   Currencies/AUDUSD: 7,169 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.827Z]   Currencies/EURGBP: 7,189 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.832Z]   Currencies/EURUSD: 7,178 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.837Z]   Currencies/GBPUSD: 7,183 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.842Z]   Currencies/NZDUSD: 7,184 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.848Z]   Currencies/USDCAD: 7,156 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.855Z]   Currencies/USDCHF: 7,168 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.861Z]   Currencies/USDJPY: 7,166 candles, 5/6 complete (83.3%)
+[2025-12-07T04:31:57.865Z]   Stock Market/AAPL: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.869Z]   Stock Market/AMZN: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.872Z]   Stock Market/BAC: 5,275 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.876Z]   Stock Market/DIA: 5,252 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.879Z]   Stock Market/GOOGL: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.883Z]   Stock Market/IWM: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.886Z]   Stock Market/JNJ: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.890Z]   Stock Market/JPM: 5,278 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.893Z]   Stock Market/MA: 5,228 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.897Z]   Stock Market/META: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.900Z]   Stock Market/MSFT: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.907Z]   Stock Market/NVDA: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.910Z]   Stock Market/PG: 5,277 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.914Z]   Stock Market/QQQ: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.918Z]   Stock Market/SPY: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.921Z]   Stock Market/TSLA: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.925Z]   Stock Market/UNH: 5,277 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.929Z]   Stock Market/V: 5,273 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.934Z]   Stock Market/WMT: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.937Z]   Stock Market/XOM: 5,280 candles, 13/14 complete (92.9%)
+[2025-12-07T04:31:57.937Z] 
+[2025-12-07T04:31:57.938Z] Assets with issues:
+[2025-12-07T04:31:57.938Z]   Commodities/COPPER: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.938Z]   Commodities/GOLD: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.938Z]   Commodities/NATGAS: 0.0% coverage, 1 gaps
+[2025-12-07T04:31:57.939Z]   Commodities/OIL: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.939Z]   Commodities/PLATINUM: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.939Z]   Commodities/SILVER: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.939Z]   Crypto/ADA: 85.7% coverage, 1 gaps
+[2025-12-07T04:31:57.939Z]   Crypto/ALGO: 0.0% coverage, 5 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/ATOM: 0.0% coverage, 5 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/AVAX: 14.3% coverage, 4 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/DOGE: 85.7% coverage, 2 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/DOT: 14.3% coverage, 3 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/LINK: 85.7% coverage, 2 gaps
+[2025-12-07T04:31:57.940Z]   Crypto/LTC: 85.7% coverage, 1 gaps
+[2025-12-07T04:31:57.941Z]   Crypto/POL: 0.0% coverage, 5 gaps
+[2025-12-07T04:31:57.941Z]   Crypto/UNI: 57.1% coverage, 5 gaps
+[2025-12-07T04:31:57.941Z]   Crypto/XLM: 85.7% coverage, 1 gaps
+[2025-12-07T04:31:57.941Z]   Currencies/AUDUSD: 83.3% coverage, 1 gaps
+[2025-12-07T04:31:57.941Z]   Currencies/EURGBP: 83.3% coverage, 1 gaps
+[2025-12-07T04:31:57.942Z]   Currencies/EURUSD: 83.3% coverage, 1 gaps
+[2025-12-07T04:31:57.942Z]   Currencies/GBPUSD: 83.3% coverage, 1 gaps
+[2025-12-07T04:31:57.942Z]   Currencies/NZDUSD: 83.3% coverage, 1 gaps
+[2025-12-07T04:31:57.943Z]   Currencies/USDCAD: 83.3% coverage, 4 gaps
+[2025-12-07T04:31:57.943Z]   Currencies/USDCHF: 83.3% coverage, 5 gaps
+[2025-12-07T04:31:57.943Z]   Currencies/USDJPY: 83.3% coverage, 2 gaps
+[2025-12-07T04:31:57.943Z] 
+[2025-12-07T04:31:57.944Z] ============================================================
+[2025-12-07T04:31:57.944Z] STEP 3: RUNNING POLYGON BACKFILL FOR ALL ASSETS
+[2025-12-07T04:31:57.944Z] ============================================================
+[2025-12-07T04:31:57.944Z] 
+[2025-12-07T04:31:57.944Z] This will take many hours. Go to sleep!
+[2025-12-07T04:31:57.945Z] 
+[2025-12-07T04:31:57.945Z] 
+Category: Crypto
+[2025-12-07T04:31:57.945Z] ----------------------------------------
+[2025-12-07T04:31:57.946Z]   Starting backfill for Crypto/BTC (730 days)...
+[2025-12-07T06:31:58.243Z]   Progress: 1/55 | Elapsed: 120m | ETA: 6480m
+[2025-12-07T06:31:58.253Z]   Starting backfill for Crypto/ETH (730 days)...
+[2025-12-07T06:32:00.564Z]   Crypto/BTC: Error or no data available
+[2025-12-07T08:32:00.759Z]   Progress: 2/55 | Elapsed: 240m | ETA: 6361m
+[2025-12-07T08:32:00.759Z]   Starting backfill for Crypto/SOL (730 days)...
+[2025-12-07T08:32:00.771Z]   Crypto/ETH: Error or no data available
+[2025-12-07T10:32:00.849Z]   Progress: 3/55 | Elapsed: 360m | ETA: 6241m
+[2025-12-07T10:32:00.849Z]   Starting backfill for Crypto/XRP (730 days)...
+[2025-12-07T10:32:00.856Z]   Crypto/SOL: Error or no data available
+[2025-12-07T12:32:00.942Z]   Progress: 4/55 | Elapsed: 480m | ETA: 6121m
+[2025-12-07T12:32:00.942Z]   Starting backfill for Crypto/DOGE (730 days)...
+[2025-12-07T12:32:00.951Z]   Crypto/XRP: Error or no data available
+[2025-12-07T14:32:00.976Z]   Progress: 5/55 | Elapsed: 600m | ETA: 6001m
+[2025-12-07T14:32:00.980Z]   Starting backfill for Crypto/ADA (730 days)...
+[2025-12-07T14:32:00.986Z]   Crypto/DOGE: Error or no data available

@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+btc_predictor/node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -39,3 +40,45 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Data files (too large for git)
+/Data/
+/btc_predictor/data/
+*.pkl
+*.pkl.gz
+*.h5
+*.jsonl
+
+# Model files (too large for git)
+/btc_predictor/models/
+*.keras
+*.weights.h5
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+.buffer/
+nul
+
+# Claude Code config
+.claude/
+
+# Root models folder
+/models/

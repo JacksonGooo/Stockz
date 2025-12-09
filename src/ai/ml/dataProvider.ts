@@ -27,12 +27,15 @@ export interface HistoricalDataPoint extends OHLCV {
 // Cache for API responses to reduce calls - longer durations for performance
 const quoteCache = new Map<string, { data: StockQuote; timestamp: number }>();
 const historicalCache = new Map<string, { data: HistoricalDataPoint[]; timestamp: number }>();
-const CACHE_DURATION = 2 * 60 * 1000; // 2 minutes for quotes
-const HISTORICAL_CACHE_DURATION = 15 * 60 * 1000; // 15 minutes for historical
+const CACHE_DURATION = 30 * 1000; // 30 seconds for quotes
+const HISTORICAL_CACHE_DURATION = 60 * 1000; // 1 minute for historical (predictions update every minute)
 
-// Default watchlist symbols - reduced for faster loading
+// Default watchlist symbols - top stocks only for fast loading
 const DEFAULT_SYMBOLS = [
-  'AAPL', 'MSFT', 'GOOGL', 'NVDA', 'TSLA'
+  // Top Tech
+  'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'NVDA', 'TSLA', 'META',
+  // Popular
+  'JPM', 'V', 'WMT'
 ];
 
 // Store dynamically added symbols

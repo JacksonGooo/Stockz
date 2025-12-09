@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Input } from '../ui/Input';
 
@@ -8,10 +9,10 @@ interface NavbarProps {
 }
 
 export function Navbar({ onMenuToggle }: NavbarProps) {
-  // Note: Search functionality not implemented - state removed to prevent unnecessary re-renders
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl">
       <div className="flex h-16 items-center justify-between px-4 md:px-6">
         {/* Left section */}
         <div className="flex items-center gap-4">
@@ -51,15 +52,17 @@ export function Navbar({ onMenuToggle }: NavbarProps) {
               </svg>
             </div>
             <span className="text-xl font-bold text-zinc-900 dark:text-white hidden sm:block">
-              Stockz
+              S.U.P.I.D.
             </span>
           </Link>
         </div>
 
-        {/* Center - Search (placeholder for future implementation) */}
+        {/* Center - Search */}
         <div className="flex-1 max-w-md mx-4 hidden md:block">
           <Input
             placeholder="Search stocks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             leftIcon={
               <svg
                 className="w-5 h-5"
@@ -97,26 +100,8 @@ export function Navbar({ onMenuToggle }: NavbarProps) {
             </svg>
           </button>
 
-          {/* Notifications */}
-          <button className="relative p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-            <svg
-              className="w-6 h-6 text-zinc-600 dark:text-zinc-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-          </button>
-
           {/* AI Status indicator */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -125,11 +110,6 @@ export function Navbar({ onMenuToggle }: NavbarProps) {
               AI Online
             </span>
           </div>
-
-          {/* Profile */}
-          <button className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white font-medium text-sm">
-            U
-          </button>
         </div>
       </div>
     </header>

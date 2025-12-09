@@ -12,7 +12,7 @@
     "@mathieuc/tradingview": "^3.5.2",
     "@tensorflow/tfjs": "^4.22.0",
     "axios": "^1.13.2",
-    "baseline-browser-mapping": "^2.9.2",
+    "lightningcss": "^1.30.2",
     "next": "16.0.4",
     "react": "19.2.0",
     "react-dom": "19.2.0"

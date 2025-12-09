@@ -1,0 +1,17 @@
+{
+  "name": "btc_predictor",
+  "version": "1.0.0",
+  "description": "**POWERFUL** neural network that predicts Bitcoin price 60 minutes into the future using historical candle data from Binance.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@mathieuc/tradingview": "^3.5.2",
+    "yahoo-finance2": "^3.10.2"
+  }
+}

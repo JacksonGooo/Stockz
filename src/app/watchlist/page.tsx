@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout';
 import { Card, Button, Badge, Input } from '@/components/ui';
 import { StockCard } from '@/components/stocks';
@@ -17,32 +17,27 @@ export default function WatchlistPage() {
     stockService.getAllStocks().then(setAllStocks);
   }, []);
 
-  const handleRemove = useCallback((symbol: string) => {
+  const handleRemove = (symbol: string) => {
     stockService.removeFromWatchlist(symbol);
     setWatchlist(stockService.getWatchlist());
-  }, []);
+  };
 
-  const handleAdd = useCallback(async (symbol: string) => {
+  const handleAdd = async (symbol: string) => {
     await stockService.addToWatchlist(symbol);
     setWatchlist(stockService.getWatchlist());
     setShowAddModal(false);
     setSearchQuery('');
-  }, []);
+  };
 
-  // Memoize filtered stocks to prevent recalculation on every render
-  const filteredStocks = useMemo(() =>
-    allStocks.filter(
-      (s) =>
-        !watchlist.some((w) => w.stock.symbol === s.symbol) &&
-        (s.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.name.toLowerCase().includes(searchQuery.toLowerCase()))
-    ), [allStocks, watchlist, searchQuery]);
+  const filteredStocks = allStocks.filter(
+    (s) =>
+      !watchlist.some((w) => w.stock.symbol === s.symbol) &&
+      (s.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
-  // Memoize totals calculation
-  const { totalValue, totalChange } = useMemo(() => ({
-    totalValue: watchlist.reduce((sum, w) => sum + w.stock.currentPrice, 0),
-    totalChange: watchlist.reduce((sum, w) => sum + w.stock.change, 0),
-  }), [watchlist]);
+  const totalValue = watchlist.reduce((sum, w) => sum + w.stock.currentPrice, 0);
+  const totalChange = watchlist.reduce((sum, w) => sum + w.stock.change, 0);
 
   return (
     <Layout>

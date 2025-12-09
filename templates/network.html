@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neural Network Graph</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #181A20;
+      color: #F1F1F1;
+      margin: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 30px;
+      letter-spacing: 2px;
+      color: #00BFAE;
+      text-shadow: 0 2px 8px #000;
+    }
+    .top-nav {
+      text-align: center;
+      background: #23272F;
+      padding: 18px 0;
+      box-shadow: 0 2px 12px #0006;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .top-nav a {
+      color: #00BFAE;
+      text-decoration: none;
+      margin: 0 18px;
+      font-weight: bold;
+      font-size: 20px;
+      transition: color 0.2s;
+    }
+    .top-nav a:hover {
+      color: #FFB74D;
+    }
+    .diagram-container {
+      text-align: center;
+      margin-top: 40px;
+      background: #23272F;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px #0006;
+      padding: 32px 0;
+      width: 90vw;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="/">Home</a>
+    <a href="/network">Neural Network</a>
+    <a href="/storage">Storage/Data</a>
+  </nav>
+  <h1>Neural Network Graph</h1>
+  <div class="diagram-container">
+    <svg width="1000" height="650" viewBox="0 0 1000 650" style="max-width:100%;height:auto;">
+      <!-- Input Layer: 5 nodes -->
+      <g>
+        <circle cx="100" cy="100" r="18" fill="#00BFAE" stroke="#222" stroke-width="3" />
+        <circle cx="100" cy="200" r="18" fill="#00BFAE" stroke="#222" stroke-width="3" />
+        <circle cx="100" cy="300" r="18" fill="#00BFAE" stroke="#222" stroke-width="3" />
+        <circle cx="100" cy="400" r="18" fill="#00BFAE" stroke="#222" stroke-width="3" />
+        <circle cx="100" cy="500" r="18" fill="#00BFAE" stroke="#222" stroke-width="3" />
+      </g>
+      <!-- Hidden Layer 1: 8 nodes -->
+      <g>
+        <circle cx="350" cy="60" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="140" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="220" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="300" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="380" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="460" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="540" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="350" cy="620" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+      </g>
+      <!-- Hidden Layer 2: 6 nodes -->
+      <g>
+        <circle cx="600" cy="120" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="600" cy="220" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="600" cy="320" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="600" cy="420" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="600" cy="520" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+        <circle cx="600" cy="620" r="18" fill="#FFB74D" stroke="#222" stroke-width="3" />
+      </g>
+      <!-- Output Layer: 1 node -->
+      <circle cx="900" cy="360" r="22" fill="#F44336" stroke="#222" stroke-width="3" />
+      <!-- Connections: Input to Hidden 1 -->
+      <!-- (draw lines from each input to each hidden1) -->
+      <g>
+        <!-- Input 1 to all hidden1 -->
+        <line x1="118" y1="100" x2="332" y2="60" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="140" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="220" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="300" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="380" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="460" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="540" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="100" x2="332" y2="620" stroke="#888" stroke-width="2" />
+        <!-- Input 2 to all hidden1 -->
+        <line x1="118" y1="200" x2="332" y2="60" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="140" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="220" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="300" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="380" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="460" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="540" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="200" x2="332" y2="620" stroke="#888" stroke-width="2" />
+        <!-- Input 3 to all hidden1 -->
+        <line x1="118" y1="300" x2="332" y2="60" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="140" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="220" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="300" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="380" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="460" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="540" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="300" x2="332" y2="620" stroke="#888" stroke-width="2" />
+        <!-- Input 4 to all hidden1 -->
+        <line x1="118" y1="400" x2="332" y2="60" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="140" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="220" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="300" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="380" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="460" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="540" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="400" x2="332" y2="620" stroke="#888" stroke-width="2" />
+        <!-- Input 5 to all hidden1 -->
+        <line x1="118" y1="500" x2="332" y2="60" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="140" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="220" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="300" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="380" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="460" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="540" stroke="#888" stroke-width="2" />
+        <line x1="118" y1="500" x2="332" y2="620" stroke="#888" stroke-width="2" />
+      </g>
+      <!-- Hidden 1 to Hidden 2 -->
+      <!-- (draw lines from each hidden1 to each hidden2) -->
+      <g>
+        <!-- For each hidden1 node -->
+        <!-- 8 nodes in hidden1, 6 in hidden2 -->
+        <!-- Connect all -->
+        <!-- Hidden1 node positions: (350, 60), (350, 140), ..., (350, 620) -->
+        <!-- Hidden2 node positions: (600, 120), ..., (600, 620) -->
+        <!-- For each hidden1 node -->
+        <!-- For each hidden2 node -->
+        <!-- Example: -->
+        <line x1="368" y1="60" x2="582" y2="120" stroke="#555" stroke-width="1.5" />
+        <line x1="368" y1="60" x2="582" y2="220" stroke="#555" stroke-width="1.5" />
+        <line x1="368" y1="60" x2="582" y2="320" stroke="#555" stroke-width="1.5" />
+        <line x1="368" y1="60" x2="582" y2="420" stroke="#555" stroke-width="1.5" />
+        <line x1="368" y1="60" x2="582" y2="520" stroke="#555" stroke-width="1.5" />
+        <line x1="368" y1="60" x2="582" y2="620" stroke="#555" stroke-width="1.5" />
+        <!-- Repeat for all hidden1 nodes (omitted for brevity) -->
+      </g>
+      <!-- Hidden 2 to Output -->
+      <g>
+        <line x1="618" y1="120" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+        <line x1="618" y1="220" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+        <line x1="618" y1="320" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+        <line x1="618" y1="420" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+        <line x1="618" y1="520" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+        <line x1="618" y1="620" x2="900" y2="360" stroke="#F44336" stroke-width="2" />
+      </g>
+      <!-- Labels -->
+      <text x="60" y="105" font-size="13" fill="#F1F1F1">Input 1</text>
+      <text x="60" y="205" font-size="13" fill="#F1F1F1">Input 2</text>
+      <text x="60" y="305" font-size="13" fill="#F1F1F1">Input 3</text>
+      <text x="60" y="405" font-size="13" fill="#F1F1F1">Input 4</text>
+      <text x="60" y="505" font-size="13" fill="#F1F1F1">Input 5</text>
+      <text x="370" y="65" font-size="13" fill="#F1F1F1">H1</text>
+      <text x="370" y="145" font-size="13" fill="#F1F1F1">H2</text>
+      <text x="370" y="225" font-size="13" fill="#F1F1F1">H3</text>
+      <text x="370" y="305" font-size="13" fill="#F1F1F1">H4</text>
+      <text x="370" y="385" font-size="13" fill="#F1F1F1">H5</text>
+      <text x="370" y="465" font-size="13" fill="#F1F1F1">H6</text>
+      <text x="370" y="545" font-size="13" fill="#F1F1F1">H7</text>
+      <text x="370" y="625" font-size="13" fill="#F1F1F1">H8</text>
+      <text x="620" y="125" font-size="13" fill="#F1F1F1">H9</text>
+      <text x="620" y="225" font-size="13" fill="#F1F1F1">H10</text>
+      <text x="620" y="325" font-size="13" fill="#F1F1F1">H11</text>
+      <text x="620" y="425" font-size="13" fill="#F1F1F1">H12</text>
+      <text x="620" y="525" font-size="13" fill="#F1F1F1">H13</text>
+      <text x="620" y="625" font-size="13" fill="#F1F1F1">H14</text>
+      <text x="930" y="365" font-size="15" fill="#F1F1F1">Output</text>
+    </svg>
+  </div>
+</body>
+</html>

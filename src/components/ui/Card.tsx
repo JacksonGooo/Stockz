@@ -14,7 +14,7 @@ const variantStyles = {
     'bg-white dark:bg-zinc-900 shadow-xl shadow-zinc-900/5 dark:shadow-zinc-900/50',
   outlined: 'bg-transparent border-2 border-zinc-200 dark:border-zinc-700',
   glass:
-    'bg-white/85 dark:bg-zinc-900/85 backdrop-blur-sm border border-white/20 dark:border-zinc-700/50',
+    'bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-700/50',
 };
 
 const paddingStyles = {
